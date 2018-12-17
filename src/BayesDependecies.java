@@ -11,9 +11,9 @@ class BayesDependecies {
 
     static final String TRAINING_DATA_SET_FILENAME = "C:\\Program Files\\Weka-3-9\\data\\breast-cancer.arff";
 
-    static final String TESTING_DATA_SET_FILENAME = "C:\\Program Files\\Weka-3-9\\data\\breast-cancer.arff";
-
     static final String PREDICTION_DATA_SET_FILENAME = "C:\\Program Files\\Weka-3-9\\data\\breast-cancer.arff";
+
+    private static final File FOLDER = new File("C:\\My Data\\Workspace\\Java Workspace\\BaeysClassifiers\\Datasets");
 
     Instances getDataSet(String fileName) throws Exception {
         StringToWordVector filter = new StringToWordVector();
@@ -32,7 +32,7 @@ class BayesDependecies {
         try {
             System.out.println(info);
             System.out.println(evaluator.toSummaryString());
-            System.out.print(" the expression for the input data as per alogorithm is ");
+            System.out.print(" the expression for the input data as per algorithm is ");
             System.out.println(classifier);
             for (int i = 0; i < predictingDataSet.numInstances(); i++) {
                 System.out.println(predictingDataSet.instance(i));
@@ -43,6 +43,20 @@ class BayesDependecies {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+    }
 
+    void testClassifierOnDatasetsFromFolder(Evaluation eval, Classifier classifier) {
+        try {
+            for (final File fileEntry : FOLDER.listFiles()) {
+                if (fileEntry.isDirectory()) {
+                    System.out.println("We have detected a folder which is not accepted.");
+                } else {
+                    Instances testingDataSet = getDataSet(fileEntry.getAbsolutePath());
+                    eval.evaluateModel(classifier, testingDataSet);
+                }
+            }
+        } catch (Exception exception) {
+            System.out.println(exception.getMessage());
+        }
     }
 }
